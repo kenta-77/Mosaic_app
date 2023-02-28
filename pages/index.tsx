@@ -64,7 +64,7 @@ export default function MainPage() {
 			return;
 		}
 		const headers = { 'X-Api-Key': 's0J3uSMD.3Fv3RqqJYiSpdrMLorUaFGBtNMP4AqVg'}
-		const data = await fetch(`http://127.0.0.1:8000/mosaics/`, { headers: headers})
+    const data = await fetch(`http://127.0.0.1:8000/mosaics/`, { headers: headers})
 		setShowImage(true);
 		setShowImage2(false);
 		setLoading(true);
