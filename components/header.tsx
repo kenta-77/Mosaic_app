@@ -10,7 +10,7 @@ export function Header() {
     <>
       <Flex minWidth='max-content' alignItems='center' gap='2' bg="teal.400" opacity="0.9" color="#ffff" h="50px" w="100vw">
         <Box pl='35px' _hover={{ color: "gray.100"}}>
-          <Link href='Mosaic_app/top'>
+          <Link href='Mosaic_app/'>
             <Heading fontSize={38} fontWeight="bold">FaMo</Heading>
           </Link>
         </Box>
