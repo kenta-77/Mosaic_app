@@ -16,12 +16,12 @@ export function Header() {
         </Box>
         <Spacer />
         <Box w='50px'>
-          <Link href='./top'>
+          <Link href='Mosaic_app/top'>
           <FontAwesomeIcon icon={faHouse} fontSize='30px' color='RGBA(0, 0, 0, 0.80)' />
           </Link>
         </Box>
         <Box w='50px'>
-          <Link href='./'>
+          <Link href='Mosaic_app/'>
             <FontAwesomeIcon fontSize='30px' icon={faWandMagicSparkles} color='RGBA(0, 0, 0, 0.80)' />
           </Link>
         </Box>
