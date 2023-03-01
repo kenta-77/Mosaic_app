@@ -8,7 +8,8 @@ const nextConfig = {
 }
 
 module.exports = {
-  assetPrefix: "/Mosaic_app",
+  assetPrefix: '/Mosaic_app',
+  basePath: '/Mosaic_app',
   images: {
     remotePatterns: [
       {
