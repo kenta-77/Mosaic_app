@@ -35,6 +35,9 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Export
+        run: npm run export 
+
       # - name: Move 404 page to root directory
       #   run: mv ./out/404/index.html ./out/404.html
 
