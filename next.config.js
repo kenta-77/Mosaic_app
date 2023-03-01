@@ -24,7 +24,7 @@ module.exports = {
         destination: "/_next/:path*",
       },
     ]
-  }
+  },
   images: {
     remotePatterns: [
       {
