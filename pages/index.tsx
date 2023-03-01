@@ -122,6 +122,7 @@ export default function MainPage() {
           headers: {
             'content-type': 'multipart/form-data',
 						'X-Api-Key' : 's0J3uSMD.3Fv3RqqJYiSpdrMLorUaFGBtNMP4AqVg',
+						'Access-Control-Allow-Origin': '*',
           },
         }
       )
