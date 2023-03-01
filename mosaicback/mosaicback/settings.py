@@ -85,9 +85,9 @@ WSGI_APPLICATION = "mosaicback.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        'NAME': 'detabasename',
-        'USER': 'postgres',
-        'PASSWORD': '123123',
+        'NAME': 'DetaBaseName',
+        'USER': 'mosaicer',
+        'PASSWORD': 'MoPos-88er',
         'HOST': '127.0.0.1',
         'PORT': '5432',
             #example@example.com
@@ -133,6 +133,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CORS_ORIGIN_WHITELIST = [
     'https://kasiwamochid.github.io',
     'http://127.0.0.1:3000',
+    'http://localhost:3000',
 ]
 
 REST_FRAMEWORK = {
