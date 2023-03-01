@@ -33,7 +33,7 @@ jobs:
         run: npm install
 
       - name: Build
-        run: npm run build --base-href /${{ steps.version.outputs.repository }}/
+        run: npm run build
 
       - name: Export
         run: npm run export 
