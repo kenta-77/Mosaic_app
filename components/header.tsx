@@ -16,7 +16,7 @@ export function Header() {
         </Box>
         <Spacer />
         <Box w='50px'>
-          <Link href='/top'>
+          <Link href='./top'>
           <FontAwesomeIcon icon={faHouse} fontSize='30px' color='RGBA(0, 0, 0, 0.80)' />
           </Link>
         </Box>

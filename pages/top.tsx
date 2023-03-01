@@ -22,7 +22,7 @@ const Home: NextPage = () => {
       </Center>
       <Box mt='50px' h='200px'>
         <Center>
-          <Link href='/'>
+          <Link href='./'>
             <Button>はじめる</Button>
           </Link>
         </Center>
