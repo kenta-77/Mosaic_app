@@ -27,7 +27,7 @@ export function Header() {
         </Box>
         <Box mr='25px' position="relative" w='38px' h="38px" >
           <Link href='https://github.com/kenta-77/Mosaic_app'>
-            <Image src='/github-mark.png' alt="" width={100} height={100}/>
+            <Image src='./github-mark.png' alt="" width={100} height={100}/>
           </Link>
         </Box>
       </Flex>
