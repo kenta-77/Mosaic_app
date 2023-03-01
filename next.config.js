@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 
+const isProd = process.env.NODE_ENV === 'production'
+const prefixPath = !isProd ? '/Mosaic_app' : ''
+
 const nextConfig = {
   reactStrictMode: true,
   images: {
@@ -8,8 +11,8 @@ const nextConfig = {
 }
 
 module.exports = {
-  assetPrefix: '/Mosaic_app',
-  basePath: '/Mosaic_app',
+  assetPrefix: prefixPath,
+  basePath: prefixPath,
   images: {
     remotePatterns: [
       {
