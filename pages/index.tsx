@@ -221,7 +221,7 @@ const FormatOptionLabel = ({ option }: { option: OptionAdapt }) => (
 								showImage ? (
 									<Image loader={myLoader} src={photo} alt="input picture" unoptimized={true} fill style={{ objectFit: 'contain'}}/>
 								):(
-									<Center h="100%" position="absolute" margin="auto">
+									<Center h="100%" position="absolute">
 										<FontAwesomeIcon icon={faImage} size="2x"/>
 									</Center>
 								)
