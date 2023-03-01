@@ -12,8 +12,8 @@ import glob
 from .process_image.detect_face import DetectFace
 
 
-@permission_classes([HasAPIKey|IsAuthenticated])
 @api_view(["GET","POST"]) #GETとPOSTメソッドを受け付ける
+@permission_classes([HasAPIKey|IsAuthenticated])
 def mosaic_upload(request):
   if request.method == "GET":
     mosaic = Mosaic.objects.latest('id')
@@ -25,7 +25,6 @@ def mosaic_upload(request):
       if len(Mosaic.objects.all()) < 1:
         serializer.save() #postデータをDBに登録
       else:
-        Mosaic.objects.all().delete()
         for p in glob.glob('./media/images/*',recursive=True):
           if os.path.isfile(p):
             os.remove(p)
@@ -35,6 +34,7 @@ def mosaic_upload(request):
         for j in glob.glob('./media/rectangles/*',recursive=True):
           if os.path.isfile(j):
             os.remove(j)
+        Mosaic.objects.all().delete()
         serializer.save() #postデータをDBに登録
       #----モザイク化----#
       mosaic = Mosaic.objects.get(id=serializer.data["id"]) #送信された画像を取得
@@ -63,8 +63,8 @@ def mosaic_upload(request):
     return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
 
-@permission_classes([HasAPIKey|IsAuthenticated])
 @api_view(["POST"]) #GETとPOSTメソッドを受け付ける
+@permission_classes([HasAPIKey|IsAuthenticated])
 def mosaic_rectangle(request):
   if request.method == "POST":
     serializer = MosaicSerializer(data=request.data)
@@ -72,7 +72,6 @@ def mosaic_rectangle(request):
       if len(Mosaic.objects.all()) < 1:
         serializer.save() #postデータをDBに登録
       else:
-        Mosaic.objects.all().delete()
         for p in glob.glob('./media/images/*',recursive=True):
           if os.path.isfile(p):
             os.remove(p)
@@ -82,6 +81,7 @@ def mosaic_rectangle(request):
         for j in glob.glob('./media/rectangles/*',recursive=True):
           if os.path.isfile(j):
             os.remove(j)
+        Mosaic.objects.all().delete()
         serializer.save() #postデータをDBに登録
       #----モザイク化----#
       mosaic = Mosaic.objects.get(id=serializer.data["id"]) #送信された画像を取得
@@ -97,16 +97,5 @@ def mosaic_rectangle(request):
       serializer = MosaicSerializer(mosaic) #データをシリアライズ
       return Response(serializer.data, status.HTTP_201_CREATED)
     return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
-
-# @api_view(["GET"])
-# def mosaic_download(request): #uploadされたデータを処理して送信するメソッド
-#   if request.method == "GET":
-#     mosaic = Mosaic.objects.get(id=1)
-#     org_path = mosaic.image.url
-#     gray_path = str(settings.BASE_DIR) + "/media/results/result.jpg"
-#     mosaic.result = "results/result.jpg"
-#     mosaic.save()
-#     serializer = MosaicSerializer(mosaic)
-#     return Response(serializer.data)
 
 # Create your views here.
