@@ -4,18 +4,15 @@ import React, { useState, useRef } from 'react';
 import axios from "axios";
 import Select, { MultiValue } from 'react-select';
 import Image from 'next/image';
-import { Button} from '@chakra-ui/react';
-import { Box, Text, Flex, Center, Divider, HStack, VStack, Tab, TabList, TabPanel, TabPanels, Tabs, Slider, SliderMark, SliderThumb, Tooltip, SliderTrack, SliderFilledTrack, ChakraProvider, Spinner} from "@chakra-ui/react";
+import { Button, ButtonGroup } from '@chakra-ui/react';
+import { Box, Text, Flex, Center, Heading, Divider, HStack, VStack, Spacer, Tab, TabList, TabPanel, TabPanels, Tabs, Slider, SliderMark, SliderThumb, Tooltip, SliderTrack, SliderFilledTrack, ChakraProvider, Spinner} from "@chakra-ui/react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faImage, faFileArrowDown, faFaceSmile } from "@fortawesome/free-solid-svg-icons";
-import theme from "../components/theme";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import theme from "./theme";
 import { FaFacebook} from 'react-icons/fa';
 import Layout from '../components/Layout'
-import { Value } from 'sass';
 
 export default function MainPage() {
-  // useState()で画像のパスを保持
-  // ※デフォルトで表示する画像を初期値で指定(この例ではpublicフォルダのdefault-profile.pngを指定)
 	type ParameterObject = {
 		mosaic_type: string;
 		strength: string;
@@ -24,9 +21,9 @@ export default function MainPage() {
 		value: string;
 		label: string;
 	}
-  const [photo, setPhoto] =useState<string>('');
-  const [result_photo, setResultPhoto] =useState<string>('');
-	const myLoader = ({ src }) => {
+  const [photo, setPhoto] =useState<string>('/face_image1.jpeg');
+  const [result_photo, setResultPhoto] =useState<string>('/face_image1.jpeg');
+	const myLoader = ({ src, width, quality }) => {
 		return `${src}`
 	}
 	const [parameter, setParameter] = useState<ParameterObject>({mosaic_type: '0', strength: '1'});
@@ -35,72 +32,36 @@ export default function MainPage() {
   const [showTooltip, setShowTooltip] = React.useState(false);
 	const [loading, setLoading] = useState<boolean>();
 	const [loading2, setLoading2] = useState<boolean>();
-	const [max_strength, setMax_strength] = useState<string>('10');
-	const [showImage, setShowImage] = useState<boolean>();
-	const [showImage2, setShowImage2] = useState<boolean>(false);
-	const inputRef = useRef<HTMLInputElement>(null);
-	const selectRef1 = useRef(null);
-	const selectRef2 = useRef(null);
-	const selectRef3 = useRef(null);
-
-	const stamp_option: OptionAdapt[] = [
-		{ value: "2", label: "/smiling_face_with_smiling_eyes_3d.png"},
-		{ value: "3", label: "/star_3d.png"},
-		{ value: "4", label: "/heart_suit_3d.png"},
-	];
 
 	const option_type = [
 		{value: '1', label: 'mosaic'},
 		{value: '2', label: 'stamp'}
 	];
 
-	const toBlob = (base64) => {
-    var bin = window.atob(base64.replace(/^.*,/, ''));
-    var buffer = new Uint8Array(bin.length);
-    for (var i = 0; i < bin.length; i++) {
-        buffer[i] = bin.charCodeAt(i);
-    }
-    // Blobを作成
-		var blob = new Blob([buffer.buffer], {
-				type: 'image/jpeg'
-		});
-    return blob;
-}
-
   const onFileInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files[0]) {
-			setShowImage(false);
-			setShowImage2(false);
-			selectRef1.current.clearValue();
-			selectRef2.current.clearValue();
-			selectRef3.current.clearValue();
+			setPhoto('/face_image1.jpeg');
 			return;
 		}
-		setShowImage(true);
-		setShowImage2(false);
 		setLoading(true);
-		selectRef1.current.clearValue();
-		selectRef2.current.clearValue();
-		selectRef3.current.clearValue();
     // React.ChangeEvent<HTMLInputElement>よりファイルを取得
     const fileObject = e.target.files[0];
 		const formData = new FormData();
 		formData.append('image', fileObject);
 		formData.append('strength', "1");
-		const image_file = await axios.post(
+		await axios.post(
 			'http://127.0.0.1:8000/mosaics/rectangle/',
 			formData,
 			{
 				headers: {
 					'Content-Type': 'multipart/form-data',
-					'X-Api-Key' : 's0J3uSMD.3Fv3RqqJYiSpdrMLorUaFGBtNMP4AqVg',
 				},
 			}
-			)
-		const blob = toBlob(image_file['data'].image[1]);
-		const blobUrl = URL.createObjectURL(blob);
-		const active_user = image_file['data'].active_number[0];
-		setMax_strength(image_file['data'].max_strength[0]);
+		)
+		const res = await fetch("http://127.0.0.1:8000/mosaics/");
+		const users = await res.json();
+		const photosrc = "http://127.0.0.1:8000" + users["rectangle"];
+		const active_user = users["active_number"];
 		for(let i = 0; i < Number(active_user); i++){
 			if(i == 0){
 				setAdapt((adapt => [{value: `${i}`, label: `${i+1}`}]));
@@ -109,48 +70,48 @@ export default function MainPage() {
 				setAdapt((adapt => [...adapt,{value: `${i}`, label: `${i+1}`}]));
 			}
 		}
-    setPhoto(blobUrl); 
+    // オブジェクトURLを生成し、profileImageを更新
+    setPhoto(photosrc); 
 		setLoading(false);
   }
 
   const onClickChangePhoto = async() => {
-		if (!inputRef.current) return;
-		selectRef1.current.clearValue();
-		selectRef2.current.clearValue();
-		selectRef3.current.clearValue();
 		setLoading2(true);
     const formData = new FormData();
 		//クリックと同時に画像をバックエンドに送信
-		formData.append('image',inputRef.current.files[0]);
+		let input_image = document.getElementById("image") as HTMLInputElement;
+		if (input_image instanceof HTMLInputElement && input_image.files) {
+			formData.append('image',input_image.files[0]);
+		}
 		formData.append('mosaic_type', String(parameter.mosaic_type));
 		formData.append('strength', String(parameter.strength));
+		console.log(person);
 		formData.append('rect_number', person);
-    const image_file = await axios.post(
+    await axios.post(
 			'http://127.0.0.1:8000/mosaics/',
         formData,
         {
           headers: {
             'content-type': 'multipart/form-data',
-						'X-Api-Key' : 's0J3uSMD.3Fv3RqqJYiSpdrMLorUaFGBtNMP4AqVg',
-						'Access-Control-Allow-Origin': '*',
           },
         }
       )
-			const blob = toBlob(image_file['data'].image[1]);
-			const blobUrl = URL.createObjectURL(blob);
-			setResultPhoto(blobUrl);
-			setShowImage2(true);
+			onClickApi();
 			setLoading2(false);
   }
+	const onClickApi = async() => {
+		try {
+		let res = await fetch("http://127.0.0.1:8000/mosaics/");
+		let users = await res.json();
+		let photosrc = "http://127.0.0.1:8000" + users["result"];
+		// let image_src = document.getElementById("image01");
+		setResultPhoto(photosrc);
+	} catch (err) { console.log('error'); }
+	};
 
 	const onChangeType = (value: string) => {
     const param_type: string = value;
 		setParameter({...parameter, mosaic_type: String(value)});
-  }
-
-	const onChangeStamp = (e: OptionAdapt) => {
-    const param_type: string = e.value;
-		setParameter({...parameter, mosaic_type: String(e.value)});
   }
 
 	
@@ -166,28 +127,38 @@ export default function MainPage() {
 			setPerson(`${adapt_text}`);
 		});
 	}
-
+	const inputRef = useRef(null);
 	const fileUpload = () => {
+    console.log(inputRef.current);
     inputRef.current.click();
   };
 
-	const onClickDownload = () => {
+	const onClickDownload = async(): Promise<File> => {
+		let res = await fetch("http://127.0.0.1:8000/mosaics/");
+		let users = await res.json();
+		let photosrc = "http://127.0.0.1:8000" + users["result"];
+		const blob = await (await fetch(photosrc)).blob();
+		const objectURL = URL.createObjectURL(blob); 
 		const a = document.createElement("a");
 		document.body.appendChild(a);
 		a.download = 'sample.jpg';
-		a.href = result_photo;
+		a.href = objectURL;
 		a.click();
 		a.remove();
-		URL.revokeObjectURL(result_photo);
+		URL.revokeObjectURL(objectURL);
 		return ;
 	}
+	const config = {
+    via: 'kara_d',
+    size: 32
+}
 
-const FormatOptionLabel = ({ option }: { option: OptionAdapt }) => (
-  <Box>
-    <Image src={option.label} alt="stamp" width={30} height={30}/>
-  </Box>
-);
-
+interface SocialProps {
+    url: string
+    title: string
+    size?: number
+    via?: string
+}
 	
   return (
 	<>
@@ -197,27 +168,22 @@ const FormatOptionLabel = ({ option }: { option: OptionAdapt }) => (
 				<Box bg="white" mt="10px" ml="3%" mr="3%" width="44%" height="690px" rounded="md" borderColor="blackAlpha.50">
 					<Box w="200px">
 						<VStack>
-							<Text color="blackAlpha.600" fontSize="30px">アップロード</Text>
+							<Text color="blackAlpha.600" fontWeight={'black'} fontSize="30px">アップロード</Text>
 							<Divider w="80px" borderColor="gray" opacity="1"/>
 						</VStack>
 					</Box>
 						<Box width="150px" height="40px" m="8px">
-							<Button onClick={fileUpload}><FontAwesomeIcon icon={faPlus}/>アップロード</Button>
-							<input hidden ref={inputRef} type="file" name="image" accept="image/*" onChange={onFileInputChange}/>
+							<Button onClick={fileUpload}><FontAwesomeIcon icon={faPlus}/>Input Photo</Button>
+							<input hidden ref={inputRef} type="file" name="image" id="image" accept="image/*" onChange={onFileInputChange}/>
 						</Box>
 					<Box width="100%" position="relative" height="300px">
-							{loading ? (
+							{loading && (
 								<Center h="100%">
 									<Spinner thickness="5px" speed="0.65s" emptyColor="gray.200" color="teal.500" size="xl"/>
 								</Center>
-							):(
-								showImage ? (
-									<Image loader={myLoader} src={photo} alt="input picture" unoptimized={true} fill style={{ objectFit: 'contain'}}/>
-								):(
-									<Center h="100%">
-										<FontAwesomeIcon icon={faImage} size="2x"/>
-									</Center>
-								)
+							)}
+							{!loading && (
+							<Image loader={myLoader} src={photo} alt="input picture" fill style={{ objectFit: 'contain'}}/>
 							)}
 					</Box>
 					<Box width="100%" height="300px" rounded="md">
@@ -238,10 +204,10 @@ const FormatOptionLabel = ({ option }: { option: OptionAdapt }) => (
 										<Text as='b' color="blackAlpha.600" fontSize="17px" pl="10%">強さ</Text>
 										<Center>
 										<HStack spacing={2} w="80%">
-											<Slider id='slider' step={1} defaultValue={1} min={1} max={Number(max_strength)} colorScheme='teal' onChange={(e) => onChangeStrength(String(e))} onMouseEnter={() => setShowTooltip(true)} onMouseLeave={() => setShowTooltip(false)}>
-												<SliderMark value={1} mt='1' ml='-2.5' fontSize="11px">低</SliderMark>
-												<SliderMark value={Number(max_strength)/2} mt='1' ml='-2.5' fontSize="11px">中</SliderMark>
-												<SliderMark value={Number(max_strength)} mt='1' ml='-2.5' fontSize="11px">高</SliderMark>
+											<Slider id='slider' step={1} defaultValue={50} min={1} max={100} colorScheme='teal' onChange={(e) => onChangeStrength(String(e))} onMouseEnter={() => setShowTooltip(true)} onMouseLeave={() => setShowTooltip(false)}>
+												<SliderMark value={5} mt='1' ml='-2.5' fontSize="11px">低</SliderMark>
+												<SliderMark value={50} mt='1' ml='-2.5' fontSize="11px">中</SliderMark>
+												<SliderMark value={95} mt='1' ml='-2.5' fontSize="11px">高</SliderMark>
 												<SliderTrack>
 													<SliderFilledTrack />
 												</SliderTrack>
@@ -254,14 +220,12 @@ const FormatOptionLabel = ({ option }: { option: OptionAdapt }) => (
 											<Text as='b' color="blackAlpha.600" fontSize="17px" pl="10%" pt="2">加工しない人</Text>
 											<Center>
 												<Box w="80%">
-													<Select instanceId="selectbox" ref={selectRef1} onChange={(e)=>{onChangeNumber(e)}} options={adapt} isMulti/>
+													<Select id="selectbox" instanceId="selectbox" onChange={(e)=>{onChangeNumber(e)}} options={adapt} isMulti/>
 												</Box>
 											</Center>
-										{showImage && (
 										<Center w="25%" pl="10%">
 											<Button colorScheme='teal' variant='solid' onClick={onClickChangePhoto}>加工する</Button>
 										</Center>
-										)}
 								</VStack>
 								</TabPanel>
 								<TabPanel>
@@ -269,10 +233,10 @@ const FormatOptionLabel = ({ option }: { option: OptionAdapt }) => (
 								<Text as='b' color="blackAlpha.600" fontSize="17px" pl="10%">強さ</Text>
 									<Center>
 										<HStack spacing={2} w="80%">
-											<Slider id='slider' step={1} defaultValue={1} min={1} max={Number(max_strength)} colorScheme='teal' onChange={(e) => onChangeStrength(String(e))} onMouseEnter={() => setShowTooltip(true)} onMouseLeave={() => setShowTooltip(false)}>
-											<SliderMark value={1} mt='1' ml='-2.5' fontSize="11px">低</SliderMark>
-												<SliderMark value={Number(max_strength)/2} mt='1' ml='-2.5' fontSize="11px">中</SliderMark>
-												<SliderMark value={Number(max_strength)} mt='1' ml='-2.5' fontSize="11px">高</SliderMark>
+											<Slider id='slider' step={1} defaultValue={50} min={1} max={100} colorScheme='teal' onChange={(e) => onChangeStrength(String(e))} onMouseEnter={() => setShowTooltip(true)} onMouseLeave={() => setShowTooltip(false)}>
+												<SliderMark value={5} mt='1' ml='-2.5' fontSize="11px">低</SliderMark>
+												<SliderMark value={50} mt='1' ml='-2.5' fontSize="11px">中</SliderMark>
+												<SliderMark value={95} mt='1' ml='-2.5' fontSize="11px">高</SliderMark>
 												<SliderTrack>
 													<SliderFilledTrack />
 												</SliderTrack>
@@ -285,35 +249,25 @@ const FormatOptionLabel = ({ option }: { option: OptionAdapt }) => (
 									<Text as='b' color="blackAlpha.600" fontSize="17px" pl="10%" pt="2">加工しない人</Text>
 									<Center>
 										<Box w="80%">
-											<Select instanceId="selectbox" ref={selectRef2} onChange={(e)=>{onChangeNumber(e)}} options={adapt} isMulti/>
+											<Select id="selectbox" instanceId="selectbox" onChange={(e)=>{onChangeNumber(e)}} options={adapt} isMulti/>
 										</Box>
 									</Center>
-									{showImage && (
 									<Center w="25%" pl="10%">
 										<Button colorScheme='teal' variant='solid' onClick={onClickChangePhoto}>加工する</Button>
 									</Center>
-									)}
 									</VStack>
 									</TabPanel>
 									<TabPanel>
-										<VStack spacing="2%" align='stretch' w="100%">
-										<Text as='b' color="blackAlpha.600" fontSize="17px" pl="10%">種類</Text>
+										<VStack spacing="3%" align='stretch' w="100%">
+										<Text as='b' color="blackAlpha.600" fontSize="17px" pl="10%" pt="2">加工しない人</Text>
 										<Center>
 											<Box w="80%">
-												<Select instanceId="selectbox" onChange={(e)=>{onChangeStamp(e)}} options={stamp_option} formatOptionLabel={(option) => (<FormatOptionLabel option={option} />)}/>
+												<Select id="selectbox" instanceId="selectbox" onChange={(e)=>{onChangeNumber(e)}} options={adapt} isMulti/>
 											</Box>
 										</Center>
-										<Text as='b' color="blackAlpha.600" fontSize="17px" pl="10%">加工しない人</Text>
-										<Center>
-											<Box w="80%">
-												<Select instanceId="selectbox" ref={selectRef3} onChange={(e)=>{onChangeNumber(e)}} options={adapt} isMulti/>
-											</Box>
-										</Center>
-										{showImage && (
 										<Center w="25%" pl="10%">
 											<Button colorScheme='teal' variant='solid' onClick={onClickChangePhoto}>加工する</Button>
 										</Center>
-										)}
 										</VStack>
 								</TabPanel>
 							</TabPanels>
@@ -323,30 +277,18 @@ const FormatOptionLabel = ({ option }: { option: OptionAdapt }) => (
 			<Box bg="white" mt="10px" ml="3%" mr="3%" width="44%" height="690px" rounded="md" borderColor="blackAlpha.50">
 				<Box w="200px">
 						<VStack>
-							<Text color="blackAlpha.600" fontSize="30px">ダウンロード</Text>
+							<Text color="blackAlpha.600" fontWeight={'black'} fontSize="30px">ダウンロード</Text>
 							<Divider w="80px" borderColor="gray" opacity="1"/>
 						</VStack>
 				</Box>
 				<Box width="100%" position="relative" height="300px" mt="56px" rounded="md">
-					<Center h="100%" position="relative">
-						{loading2 ? (
+					<Center h="100%">
+						{loading2 && (
 								<Center>
 									<Spinner thickness="5px" speed="0.65s" emptyColor="gray.200" color="teal.500" size="xl"/>
 								</Center>
-							):(
-								showImage2 ? (
-									result_photo ? (
-										<Image loader={myLoader} src={result_photo} alt="input picture" unoptimized={true} fill style={{ objectFit: 'contain'}}/>
-									):(
-										<Center h="100%">
-											<FontAwesomeIcon icon={faFaceSmile} size="3x"/>
-										</Center>
-									)
-								):(
-									<Center h="100%">
-										<FontAwesomeIcon icon={faFaceSmile} size="3x"/>
-									</Center>
-								)
+							)}:{!loading2 && (
+								<Image loader={myLoader} src={result_photo} alt="input picture" fill style={{ objectFit: 'contain'}}/>
 							)}
 					</Center>
 				</Box>
@@ -356,11 +298,7 @@ const FormatOptionLabel = ({ option }: { option: OptionAdapt }) => (
 				<Center>
 					<Box width="80%" height="100px" rounded="md">
 							<Box w="50%" mt="10px">
-								{showImage2 ? (
-									<Button colorScheme='teal' variant='solid' onClick={onClickDownload}><FontAwesomeIcon icon={faFileArrowDown}/><Text m="3px">ダウンロード</Text></Button>
-								):(
-									<Box></Box>
-								)}
+									<Button colorScheme='teal' variant='solid' onClick={onClickDownload}>ダウンロード</Button>
 							</Box>
 					</Box>
 				</Center>
@@ -373,7 +311,7 @@ const FormatOptionLabel = ({ option }: { option: OptionAdapt }) => (
 									<Box position="relative" w='50px' h="50px" mr='10px' ml='10px' color='black'> {/* twitter32px以上 */}
 										<Link href='https://twitter.com/compose/tweet'>
 											<Center h='100%' w='100%'>
-												<Image src='./Twitter.png' alt="" width={100} height={100}/>
+												<Image src='/Twitter.png' alt="" fill style={{ objectFit: 'contain'}}/>
 											</Center>
 										</Link>
 									</Box>
@@ -387,14 +325,14 @@ const FormatOptionLabel = ({ option }: { option: OptionAdapt }) => (
 									<Box position="relative" w='50px' h="50px" mr='10px' ml='10px'> {/* instagram29px以上 */}
 										<Link href='https://www.instagram.com/'>
 											<Center h='100%' w='100%'>
-												<Image src='./Instagram.png' alt="" width={100} height={100}/>
+												<Image src='/Instagram.png' alt="" fill style={{ objectFit: 'contain'}}/>
 											</Center>
 										</Link>
 									</Box>
 									<Box position="relative" w='50px' h="50px" mr='10px' ml='10px'> {/* instagram29px以上 */}
 										<Link href='https://timeline.line.me/social-plugin/share?url=&text='>
 											<Center h='100%' w='100%'>
-												<Image src='./LINE.png' alt="" width={100} height={100}/>
+												<Image src='/LINE.png' alt="" fill style={{ objectFit: 'contain'}}/>
 											</Center>
 										</Link>
 									</Box>
