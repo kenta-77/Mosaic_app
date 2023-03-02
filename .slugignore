@@ -1,6 +1,6 @@
-pages/
-public/
-src/
-styles/
-log/
-tmp/
+/pages
+/public
+/src
+/styles
+/log
+/tmp
