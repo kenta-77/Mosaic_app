@@ -29,7 +29,7 @@ SECRET_KEY = "django-insecure-dg-f9utc5jyt6f0wuc*v+e6g+683ebqrh+2(*ffnmekr@#vj7x
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1' ,'face-mosaic.com', 'herokuapp.com']
+ALLOWED_HOSTS = ['127.0.0.1' ,'face-mosaic.com', 'mosaic-app.herokuapp.com']
 
 
 # Application definition
