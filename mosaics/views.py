@@ -2,9 +2,10 @@ from django.shortcuts import render
 from django.conf import settings
 from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
-from rest_framework_api_key.permissions import HasAPIKey
+from rest_framework.decorators import api_view
+# from rest_framework.decorators import api_view, permission_classes
+# from rest_framework.permissions import IsAuthenticated
+# from rest_framework_api_key.permissions import HasAPIKey
 from .models import Mosaic
 from .serializers import MosaicSerializer
 import os
@@ -19,7 +20,7 @@ import base64
 
 
 @api_view(["POST"]) #GETとPOSTメソッドを受け付ける
-@permission_classes([HasAPIKey|IsAuthenticated])
+# @permission_classes([HasAPIKey|IsAuthenticated])
 def mosaic_upload(request):
   if request.method == "POST":
     serializer = MosaicSerializer(data=request.data)
@@ -68,7 +69,7 @@ def mosaic_upload(request):
 
 
 @api_view(["POST"]) #GETとPOSTメソッドを受け付ける
-@permission_classes([HasAPIKey|IsAuthenticated])
+# @permission_classes([HasAPIKey|IsAuthenticated])
 def mosaic_rectangle(request):
   if request.method == "POST":
     serializer = MosaicSerializer(data=request.data)

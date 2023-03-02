@@ -144,17 +144,18 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CORS_ORIGIN_WHITELIST = [
     'https://face-mosaic.com',
+    'https://face-mosaic.com/main',
     'https://kenta-77.github.io',
     'http://127.0.0.1:3000',
     'http://localhost:3000',
 ]
 
-REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-        "rest_framework_api_key.permissions.HasAPIKey",
-    )
-}
+# REST_FRAMEWORK = {
+#     'DEFAULT_PERMISSION_CLASSES': (
+#         'rest_framework.permissions.IsAuthenticated',
+#         "rest_framework_api_key.permissions.HasAPIKey",
+#     )
+# }
 
 CORS_ALLOW_HEADERS = ('accept','accept-encoding','authorization','content-type','dnt','origin','user-agent','x-csrftoken','x-requested-with','access-control-allow-origin','x-api-key',)
 
