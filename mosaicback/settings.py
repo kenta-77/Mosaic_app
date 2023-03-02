@@ -144,7 +144,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CORS_ORIGIN_WHITELIST = [
     'https://face-mosaic.com',
-    'https://face-mosaic.com/main',
     'https://kenta-77.github.io',
     'http://127.0.0.1:3000',
     'http://localhost:3000',
