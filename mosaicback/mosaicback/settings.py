@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 import os
+import django_heroku
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,9 +28,9 @@ API_KEY_CUSTOM_HEADER = "HTTP_X_API_KEY"
 SECRET_KEY = "django-insecure-dg-f9utc5jyt6f0wuc*v+e6g+683ebqrh+2(*ffnmekr@#vj7x"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1' ,'face-mosaic.com', 'herokuapp.com']
 
 
 # Application definition
@@ -49,6 +50,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     "django.contrib.sessions.middleware.SessionMiddleware",
     'corsheaders.middleware.CorsMiddleware',
     "django.middleware.common.CommonMiddleware",
@@ -82,15 +84,24 @@ WSGI_APPLICATION = "mosaicback.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         'NAME': 'DetaBaseName',
+#         'USER': 'mosaicer',
+#         'PASSWORD': 'MoPos-88er',
+#         'HOST': '127.0.0.1',
+#         'PORT': '5432',
+#     }
+# }
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        'NAME': 'DetaBaseName',
-        'USER': 'mosaicer',
-        'PASSWORD': 'MoPos-88er',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
-            #example@example.com
+    'default': {
+    'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    'NAME': 'name',
+    'USER': 'user',
+    'PASSWORD': '',
+    'HOST': 'host',
+    'PORT': '',
     }
 }
 
@@ -123,8 +134,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = "static/"
-
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = '/static/'
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
@@ -145,3 +159,20 @@ REST_FRAMEWORK = {
 }
 
 CORS_ALLOW_HEADERS = ('accept','accept-encoding','authorization','content-type','dnt','origin','user-agent','x-csrftoken','x-requested-with','access-control-allow-origin','x-api-key',)
+
+#Heroku database
+import dj_database_url
+db_from_env = dj_database_url.config()
+DATABASES['default'].update(db_from_env)
+db_from_env = dj_database_url.config(conn_max_age=600,
+ssl_require=True)
+DATABASES['default'].update(db_from_env)
+try:
+ from .local_settings import *
+except ImportError:
+    pass
+if not DEBUG:
+    SECRET_KEY = 'django-insecure-dg-f9utc5jyt6f0wuc*v+e6g+683ebqrh+2(*ffnmekr@#vj7x'
+
+import django_heroku
+django_heroku.settings(locals())
