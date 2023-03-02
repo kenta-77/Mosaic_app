@@ -94,10 +94,10 @@ WSGI_APPLICATION = "mosaicback.wsgi.application"
 # }
 DATABASES = {
     'default': {
-    'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    'NAME': 'name',
-    'USER': 'user',
-    'PASSWORD': '',
+    'ENGINE': 'django.db.backends.postgresql',
+    'NAME': 'DetaBase',
+    'USER': 'mosaicer',
+    'PASSWORD': 'MoPos-88er',
     'HOST': 'host',
     'PORT': '',
     }
