@@ -14,5 +14,5 @@ jobs:
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "mosaic-app" #Must be unique in Heroku
-          heroku_email: "pmd46b23@s.okayama-u.ac.jp"
+          heroku_email: ${{secrets.HEROKU_EMAIL}}
           appdir: "mosaicback" # <- This will point to the api folder in your project
