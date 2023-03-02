@@ -1,4 +1,5 @@
-name: Deploy
+name: Deploy to GitHub Pages
+
 
 on:
   push:
@@ -8,11 +9,43 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v2
-      - uses: akhileshns/heroku-deploy@v3.12.13 # This is the action
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
         with:
-          heroku_api_key: "3dd0a0a1-b1ed-463c-add8-e7d18101a022"
-          heroku_app_name: "mosaic-app" #Must be unique in Heroku
-          heroku_email: "pmd46b23@s.okayama-u.ac.jp"
-          appdir: "mosaicback" # <- This will point to the api folder in your project
+          node-version: 16
+          cache: npm
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.npm
+            ${{ github.workspace }}/.next/cache
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Export
+        run: npm run export 
+
+      # - name: Move 404 page to root directory
+      #   run: mv ./out/404/index.html ./out/404.html
+
+      - name: add nojekyll
+        run: touch ./out/.nojekyll
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: out
