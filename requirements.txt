@@ -1,4 +1,4 @@
-absl-py==1.4.0
+absl-py==0.15.0
 asgiref==3.5.2
 astunparse==1.6.3
 beautifulsoup4==4.11.2
