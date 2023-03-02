@@ -45,8 +45,8 @@ class DetectFace() :
         self.database_path = database_path
         self.image_file = image_file
         self.filter_size = filter_size
-        self.result_path = "media/results/" + str(result_path) + "result.jpg"
-        self.rect_path = "media/rectangles/" + str(result_path) + "rect_number.jpg"
+        self.result_path = "./media/results/" + str(result_path) + "result.jpg"
+        self.rect_path = "./media/rectangles/" + str(result_path) + "rect_number.jpg"
 
         self.active_person = []
         for i in range(len(rect_number)):
