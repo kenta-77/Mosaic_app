@@ -109,13 +109,13 @@ class DetectFace() :
     #顔検出 検出した顔の数を返す
     def detect_face_rectangle(self) :
         self.detected_faces = self.detect_face_retina()
-        copy_image = self.image.copy()
-        if len(self.detected_faces)==0:
-            print("No face detected from select image")
-        else :
-            self.active_faces = [True] * len(self.detected_faces)
-        for i in range(len(self.active_faces)):
-            self.active_number += 1
+        # copy_image = self.image.copy()
+        # if len(self.detected_faces)==0:
+        #     print("No face detected from select image")
+        # else :
+        #     self.active_faces = [True] * len(self.detected_faces)
+        # for i in range(len(self.active_faces)):
+        #     self.active_number += 1
         #顔を囲む四角と，顔番号を書く
         # file_path = self.rect_path
         # for i, key in enumerate(self.detected_faces) :
