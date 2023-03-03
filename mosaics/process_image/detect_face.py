@@ -117,14 +117,14 @@ class DetectFace() :
         for i in range(len(self.active_faces)):
             self.active_number += 1
         #顔を囲む四角と，顔番号を書く
-        file_path = self.rect_path
-        for i, key in enumerate(self.detected_faces) :
-            identity = self.detected_faces[key]
-            facial_area = identity["facial_area"]
-            cv2.rectangle(copy_image, (facial_area[0], facial_area[1]), (facial_area[2], facial_area[3]), (255,255,255), 1)
-            cv2.putText(copy_image, str(i+1), (facial_area[0], facial_area[3]), fontFace = cv2.FONT_ITALIC, fontScale = 0.01*(facial_area[2]-facial_area[0]),thickness=10, color = (0,0,0)) #輪郭文字の貼り付け
-            cv2.putText(copy_image, str(i+1), (facial_area[0], facial_area[3]), fontFace = cv2.FONT_ITALIC, fontScale = 0.01*(facial_area[2]-facial_area[0]),thickness=2, color = (255,255,255)) #内側文字の貼り付け
-        cv2.imwrite(file_path, copy_image)
+        # file_path = self.rect_path
+        # for i, key in enumerate(self.detected_faces) :
+        #     identity = self.detected_faces[key]
+        #     facial_area = identity["facial_area"]
+        #     cv2.rectangle(copy_image, (facial_area[0], facial_area[1]), (facial_area[2], facial_area[3]), (255,255,255), 1)
+        #     cv2.putText(copy_image, str(i+1), (facial_area[0], facial_area[3]), fontFace = cv2.FONT_ITALIC, fontScale = 0.01*(facial_area[2]-facial_area[0]),thickness=10, color = (0,0,0)) #輪郭文字の貼り付け
+        #     cv2.putText(copy_image, str(i+1), (facial_area[0], facial_area[3]), fontFace = cv2.FONT_ITALIC, fontScale = 0.01*(facial_area[2]-facial_area[0]),thickness=2, color = (255,255,255)) #内側文字の貼り付け
+        # cv2.imwrite(file_path, copy_image)
         #最も大きいフィルタサイズを計算する(顔領域の最も長い辺を探す)
         # longest_side = 1
         # for i, key in enumerate(self.detected_faces) :
