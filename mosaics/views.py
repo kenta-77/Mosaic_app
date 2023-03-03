@@ -13,6 +13,7 @@ from .process_image.detect_face import DetectFace
 import base64
 import gc
 from retinaface import RetinaFace
+import asyncio
 
 
 @api_view(["POST"]) #GETとPOSTメソッドを受け付ける
@@ -63,7 +64,7 @@ def mosaic_upload(request):
 # @permission_classes([HasAPIKey|IsAuthenticated])
 def mosaic_rectangle(request):
   if request.method == "GET":
-    resp = RetinaFace.detect_faces('./media/images/test.jpg', threshold = 0.5)
+    asyncio.run(retina_first())
     return Response('hello', status.HTTP_200_OK)
 
   elif request.method == "POST":
@@ -92,5 +93,8 @@ def mosaic_rectangle(request):
       del image_file
       return Response(files, status.HTTP_201_CREATED)
     return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
+  
+async def retina_first():
+  resp = RetinaFace.detect_faces('./media/images/test.jpg', threshold = 0.5)
 
 # Create your views here.
