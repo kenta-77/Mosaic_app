@@ -45,6 +45,7 @@ def mosaic_upload(request):
         elif int(serializer.validated_data['mosaic_type']) == 4:
           detect_test.stamp_face("heart") #検知した顔にスタンプを表示するメソッドを実行
       del detect_test #インスタンス削除
+      gc.collect()
       rectangle = "./media/rectangles/" + str(result_path) + "rect_number.jpg" #結果画像のurlをDBに登録
       result = "./media/results/" + str(result_path) + "result.jpg" #結果画像のurlをDBに登録
       with open(result, mode='rb') as f:
@@ -78,6 +79,7 @@ def mosaic_rectangle(request):
       result = "./media/results/rect_image.jpg" #結果画像のurlをDBに登録
       max_strength = str(detect_test.calc_max_filter_size()) #フィルターサイズの最大値を計算
       del detect_test #インスタンス削除
+      gc.collect()
       with open(rectangle, mode='rb') as f:
         image_file = f.read()
       os.remove(rectangle)
