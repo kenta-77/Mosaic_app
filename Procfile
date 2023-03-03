@@ -1,2 +1,2 @@
 web: gunicorn mosaicback.wsgi --log-file -
-web: gunicorn mosaic-app:app --preload
+web: gunicorn mosaicback:app --preload
