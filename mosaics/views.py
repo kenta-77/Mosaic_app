@@ -82,11 +82,12 @@ def mosaic_rectangle(request):
       # max_strength = str(detect_test.calc_max_filter_size()) #フィルターサイズの最大値を計算
       # del detect_test #インスタンス削除
       # gc.collect()
-      with open(rectangle, mode='rb') as f:
+      # with open(rectangle, mode='rb') as f:
+      with open('./media/images/image.jpg', mode='rb') as f:
         image_file = f.read()
-      os.remove(rectangle)
-      os.remove(up_path)
-      os.remove(result)
+      # os.remove(rectangle)
+      # os.remove(up_path)
+      # os.remove(result)
       encoded_data = base64.b64encode(image_file)
       files = {}
       mine_type = "image/jpeg"
