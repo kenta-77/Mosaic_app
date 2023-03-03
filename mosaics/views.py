@@ -82,6 +82,7 @@ def mosaic_rectangle(request):
       file_name = "image.jpg"
       files = {'image': (file_name, encoded_data, mine_type), 'active_number': (active_number, 'application/json'), 'max_strength':(max_strength, 'application/json')}
       del detect_test
+      del image_file
       return Response(files, status.HTTP_201_CREATED)
     return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
