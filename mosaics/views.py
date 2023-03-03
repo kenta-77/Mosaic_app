@@ -70,16 +70,18 @@ def mosaic_rectangle(request):
       with open(up_path,'wb+') as f: # 3
         for chunk in serializer.validated_data['image'].chunks(): # 4
           f.write(chunk) # 5
-      org_path = '/media/images/image.jpg'
-      detect_test = DetectFace(database_path=str(settings.BASE_DIR), image_file=org_path, result_path='0123', filter_size=1) #モザイククラスのインスタンス作成
-      detect_test.detect_face() #顔検知メソッドを実行
-      detect_test.write_rectangle() #検知した顔の領域を表示するメソッドを実行
-      active_number = detect_test.write_rect_and_number() #検知した顔の領域を表示するメソッドを実行
+      # org_path = '/media/images/image.jpg'
+      # detect_test = DetectFace(database_path=str(settings.BASE_DIR), image_file=org_path, result_path='0123', filter_size=1) #モザイククラスのインスタンス作成
+      # detect_test.detect_face() #顔検知メソッドを実行
+      # detect_test.write_rectangle() #検知した顔の領域を表示するメソッドを実行
+      # active_number = detect_test.write_rect_and_number() #検知した顔の領域を表示するメソッドを実行
+      active_number = str(0) #検知した顔の領域を表示するメソッドを実行
       rectangle = "./media/rectangles/" + '0123' + "rect_number.jpg" #結果画像のurlをDBに登録
       result = "./media/results/rect_image.jpg" #結果画像のurlをDBに登録
-      max_strength = str(detect_test.calc_max_filter_size()) #フィルターサイズの最大値を計算
-      del detect_test #インスタンス削除
-      gc.collect()
+      max_strength = str(0) #フィルターサイズの最大値を計算
+      # max_strength = str(detect_test.calc_max_filter_size()) #フィルターサイズの最大値を計算
+      # del detect_test #インスタンス削除
+      # gc.collect()
       with open(rectangle, mode='rb') as f:
         image_file = f.read()
       os.remove(rectangle)
