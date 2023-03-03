@@ -126,14 +126,14 @@ class DetectFace() :
             cv2.putText(copy_image, str(i+1), (facial_area[0], facial_area[3]), fontFace = cv2.FONT_ITALIC, fontScale = 0.01*(facial_area[2]-facial_area[0]),thickness=2, color = (255,255,255)) #内側文字の貼り付け
         cv2.imwrite(file_path, copy_image)
         #最も大きいフィルタサイズを計算する(顔領域の最も長い辺を探す)
-        longest_side = 1
-        for i, key in enumerate(self.detected_faces) :
-            identity = self.detected_faces[key]
-            facial_area = identity["facial_area"]
-            long_side = max((facial_area[2]-facial_area[0]), (facial_area[3]-facial_area[1]))
-            longest_side = max(longest_side, long_side)
-        max_filter_size = longest_side
-        return len(self.detected_faces), str(self.active_number), str(max_filter_size)
+        # longest_side = 1
+        # for i, key in enumerate(self.detected_faces) :
+        #     identity = self.detected_faces[key]
+        #     facial_area = identity["facial_area"]
+        #     long_side = max((facial_area[2]-facial_area[0]), (facial_area[3]-facial_area[1]))
+        #     longest_side = max(longest_side, long_side)
+        # max_filter_size = longest_side
+        return #len(self.detected_faces), str(self.active_number), str(max_filter_size)
 
     #最も大きいフィルタサイズを計算する(顔領域の最も長い辺を探す)
     def calc_max_filter_size(self) :
