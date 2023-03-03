@@ -28,6 +28,7 @@ MarkupSafe==2.1.2
 numpy==1.21.6
 oauthlib==3.2.2
 opencv-python-headless==4.5.1.48
+opencv-python==4.5.1.48
 opt-einsum==3.3.0
 packaging==23.0
 Pillow==9.3.0
