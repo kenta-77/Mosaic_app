@@ -1,2 +1,4 @@
 libgl1
 libopencv-dev
+linfontconfig1
+libxrender1
