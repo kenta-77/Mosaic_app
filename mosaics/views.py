@@ -81,6 +81,7 @@ def mosaic_rectangle(request):
       mine_type = "image/jpeg"
       file_name = "image.jpg"
       files = {'image': (file_name, encoded_data, mine_type), 'active_number': (active_number, 'application/json'), 'max_strength':(max_strength, 'application/json')}
+      gc.collect()
       return Response(files, status.HTTP_201_CREATED)
     return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
