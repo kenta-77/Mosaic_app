@@ -12,6 +12,7 @@ import os
 from .process_image.detect_face import DetectFace
 import base64
 import gc
+from retinaface import RetinaFace
 
 
 @api_view(["POST"]) #GETとPOSTメソッドを受け付ける
@@ -58,34 +59,36 @@ def mosaic_upload(request):
     return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(["POST"]) #GETとPOSTメソッドを受け付ける
+@api_view(["POST", "GET"]) #GETとPOSTメソッドを受け付ける
 # @permission_classes([HasAPIKey|IsAuthenticated])
 def mosaic_rectangle(request):
-  if request.method == "POST":
+  if request.method == "GET":
+    resp = RetinaFace.detect_faces('./media/images/test.jpg', threshold = 0.5)
+
+  elif request.method == "POST":
     serializer = MosaicSerializer(data=request.data)
     if serializer.is_valid():
-      # up_path = './media/images/image.jpg'
-      # with open(up_path,'wb+') as f: # 3
-      #   for chunk in serializer.validated_data['image'].chunks(): # 4
-      #     f.write(chunk) # 5
-      # org_path = '/media/images/image.jpg'
+      up_path = './media/images/image.jpg'
+      with open(up_path,'wb+') as f: # 3
+        for chunk in serializer.validated_data['image'].chunks(): # 4
+          f.write(chunk) # 5
+      org_path = '/media/images/image.jpg'
       test_path = '/media/images/test.jpg'
       detect_test = DetectFace(database_path=str(settings.BASE_DIR), image_file=test_path, result_path='0123', filter_size=1) #モザイククラスのインスタンス作成
       detect_test.detect_face_rectangle() #顔検知メソッドを実行
-      # _, active_number, max_strength  = detect_test.detect_face_rectangle() #顔検知メソッドを実行
-      # rectangle = "./media/rectangles/" + '0123' + "rect_number.jpg" #結果画像のurlをDBに登録
-      # with open(rectangle, mode='rb') as f:
-      #   image_file = f.read()
-      # os.remove(rectangle)
-      # os.remove(up_path)
-      # encoded_data = base64.b64encode(image_file)
+      _, active_number, max_strength  = detect_test.detect_face_rectangle() #顔検知メソッドを実行
+      rectangle = "./media/rectangles/" + '0123' + "rect_number.jpg" #結果画像のurlをDBに登録
+      with open(rectangle, mode='rb') as f:
+        image_file = f.read()
+      os.remove(rectangle)
+      os.remove(up_path)
+      encoded_data = base64.b64encode(image_file)
       files = {}
-      # mine_type = "image/jpeg"
-      # file_name = "image.jpg"
-      files = {'max_strength':('1', 'application/json')}
-      # files = {'image': (file_name, encoded_data, mine_type), 'active_number': (active_number, 'application/json'), 'max_strength':(max_strength, 'application/json')}
-      # del detect_test
-      # del image_file
+      mine_type = "image/jpeg"
+      file_name = "image.jpg"
+      files = {'image': (file_name, encoded_data, mine_type), 'active_number': (active_number, 'application/json'), 'max_strength':(max_strength, 'application/json')}
+      del detect_test
+      del image_file
       return Response(files, status.HTTP_201_CREATED)
     return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
