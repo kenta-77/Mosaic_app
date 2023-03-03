@@ -70,17 +70,13 @@ def mosaic_rectangle(request):
           f.write(chunk) # 5
       org_path = '/media/images/image.jpg'
       detect_test = DetectFace(database_path=str(settings.BASE_DIR), image_file=org_path, result_path='0123', filter_size=1) #モザイククラスのインスタンス作成
-      _, active_number, max_strength  = detect_test.detect_face_rectangle() #顔検知メソッドを実行
+      _, active_number, max_strength  = detect_test.detect_face_rectangle().copy() #顔検知メソッドを実行
       del detect_test
-      # detect_test.write_rectangle() #検知した顔の領域を表示するメソッドを実行
-      # active_number = detect_test.write_rect_and_number() #検知した顔の領域を表示するメソッドを実行
       rectangle = "./media/rectangles/" + '0123' + "rect_number.jpg" #結果画像のurlをDBに登録
-      # max_strength = str(detect_test.calc_max_filter_size()) #フィルターサイズの最大値を計算
       with open(rectangle, mode='rb') as f:
         image_file = f.read()
       # os.remove(rectangle)
       # os.remove(up_path)
-      # os.remove(result)
       encoded_data = base64.b64encode(image_file)
       files = {}
       mine_type = "image/jpeg"

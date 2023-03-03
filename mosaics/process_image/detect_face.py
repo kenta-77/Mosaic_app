@@ -125,6 +125,7 @@ class DetectFace() :
             cv2.putText(copy_image, str(i+1), (facial_area[0], facial_area[3]), fontFace = cv2.FONT_ITALIC, fontScale = 0.01*(facial_area[2]-facial_area[0]),thickness=10, color = (0,0,0)) #輪郭文字の貼り付け
             cv2.putText(copy_image, str(i+1), (facial_area[0], facial_area[3]), fontFace = cv2.FONT_ITALIC, fontScale = 0.01*(facial_area[2]-facial_area[0]),thickness=2, color = (255,255,255)) #内側文字の貼り付け
         cv2.imwrite(file_path, copy_image)
+        del copy_image
         #最も大きいフィルタサイズを計算する(顔領域の最も長い辺を探す)
         longest_side = 1
         for i, key in enumerate(self.detected_faces) :
