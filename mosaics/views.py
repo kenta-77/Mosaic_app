@@ -11,7 +11,7 @@ from .serializers import MosaicSerializer
 import os
 from .process_image.detect_face import DetectFace
 import base64
-import base64
+import gc
 
 
 @api_view(["POST"]) #GETとPOSTメソッドを受け付ける
@@ -53,6 +53,7 @@ def mosaic_upload(request):
       encoded_data = base64.b64encode(image_file)
       files = {}
       files = {'image': ("image.jpg", encoded_data, "image/jpeg")}
+      gc.collect()
       return Response(files, status.HTTP_201_CREATED)
     return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
