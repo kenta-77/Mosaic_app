@@ -1,1 +1,6 @@
 libgl1
+libopencv-dev
+libsm6
+libxrender1
+libfontconfig1
+libice6
