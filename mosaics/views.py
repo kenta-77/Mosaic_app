@@ -64,6 +64,7 @@ def mosaic_upload(request):
 def mosaic_rectangle(request):
   if request.method == "GET":
     resp = RetinaFace.detect_faces('./media/images/test.jpg', threshold = 0.5)
+    return Response('hello', status.HTTP_200_OK)
 
   elif request.method == "POST":
     serializer = MosaicSerializer(data=request.data)
