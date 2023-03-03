@@ -4,4 +4,4 @@ build:
   packages:
     - libopencv-dev
 run:
-  web: gunicorn mosaicback:app --log-file -
+  web: gunicorn mosaicback.wsgi --log-file - 
