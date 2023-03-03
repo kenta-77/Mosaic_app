@@ -58,4 +58,3 @@ urllib3==1.26.12
 Werkzeug==2.2.2
 wrapt==1.12.1
 opencv-python-headless==4.5.4.58
-opencv-contrib-python==4.5.4.58
