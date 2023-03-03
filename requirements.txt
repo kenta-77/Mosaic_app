@@ -12,7 +12,7 @@ djangorestframework==3.14.0
 djangorestframework-api-key==2.3.0
 filelock==3.9.0
 flatbuffers==23.1.21
-gast==0.4.0
+gast==0.2.2
 gdown==4.6.4
 google-auth==2.16.1
 google-auth-oauthlib==0.4.6
