@@ -107,7 +107,7 @@ class DetectFace() :
         return resp
 
     #顔検出 検出した顔の数を返す
-    def detect_face(self) :
+    def detect_face_rectangle(self) :
         self.detected_faces = self.detect_face_retina()
         copy_image = self.image.copy()
         if len(self.detected_faces)==0:
@@ -116,6 +116,7 @@ class DetectFace() :
             self.active_faces = [True] * len(self.detected_faces)
         for i in range(len(self.active_faces)):
             self.active_number += 1
+        #顔を囲む四角と，顔番号を書く
         file_path = self.rect_path
         for i, key in enumerate(self.detected_faces) :
             identity = self.detected_faces[key]
@@ -124,7 +125,15 @@ class DetectFace() :
             cv2.putText(copy_image, str(i+1), (facial_area[0], facial_area[3]), fontFace = cv2.FONT_ITALIC, fontScale = 0.01*(facial_area[2]-facial_area[0]),thickness=10, color = (0,0,0)) #輪郭文字の貼り付け
             cv2.putText(copy_image, str(i+1), (facial_area[0], facial_area[3]), fontFace = cv2.FONT_ITALIC, fontScale = 0.01*(facial_area[2]-facial_area[0]),thickness=2, color = (255,255,255)) #内側文字の貼り付け
         cv2.imwrite(file_path, copy_image)
-        return len(self.detected_faces)
+        #最も大きいフィルタサイズを計算する(顔領域の最も長い辺を探す)
+        longest_side = 1
+        for i, key in enumerate(self.detected_faces) :
+            identity = self.detected_faces[key]
+            facial_area = identity["facial_area"]
+            long_side = max((facial_area[2]-facial_area[0]), (facial_area[3]-facial_area[1]))
+            longest_side = max(longest_side, long_side)
+        max_filter_size = longest_side
+        return len(self.detected_faces), str(self.active_number), str(max_filter_size)
 
     #最も大きいフィルタサイズを計算する(顔領域の最も長い辺を探す)
     def calc_max_filter_size(self) :
