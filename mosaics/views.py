@@ -72,7 +72,6 @@ def mosaic_rectangle(request):
       detect_test = DetectFace(database_path=str(settings.BASE_DIR), image_file=org_path, result_path='0123', filter_size=1) #モザイククラスのインスタンス作成
       _, active_number, max_strength  = detect_test.detect_face_rectangle() #顔検知メソッドを実行
       del detect_test
-      gc.collect()
       # detect_test.write_rectangle() #検知した顔の領域を表示するメソッドを実行
       # active_number = detect_test.write_rect_and_number() #検知した顔の領域を表示するメソッドを実行
       rectangle = "./media/rectangles/" + '0123' + "rect_number.jpg" #結果画像のurlをDBに登録
@@ -87,6 +86,7 @@ def mosaic_rectangle(request):
       mine_type = "image/jpeg"
       file_name = "image.jpg"
       files = {'image': (file_name, encoded_data, mine_type), 'active_number': (active_number, 'application/json'), 'max_strength':(max_strength, 'application/json')}
+      gc.collect()
       return Response(files, status.HTTP_201_CREATED)
     return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
