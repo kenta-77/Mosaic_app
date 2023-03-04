@@ -66,7 +66,7 @@ def mosaic_rectangle(request):
   if request.method == "GET":
     files = {}
     files = {'max_strength':('2', 'application/json')}
-    proc = subprocess.Popen(['python', './mosaics/process_image/back_retina.py'], stdout=PIPE, stderr=PIPE)
+    proc = subprocess.Popen(['nohup', 'python', './mosaics/process_image/back_retina.py', '&'], stdout=PIPE, stderr=PIPE)
     try:
         # タイムアウトは60秒以上の処理だった場合
         outs, errs = proc.communicate(timeout=60)
