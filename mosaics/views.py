@@ -12,8 +12,8 @@ import os
 from .process_image.detect_face import DetectFace
 import base64
 import gc
-from retinaface import RetinaFace
-import asyncio
+import subprocess
+from subprocess import PIPE
 
 
 @api_view(["POST"]) #GETとPOSTメソッドを受け付ける
@@ -64,9 +64,18 @@ def mosaic_upload(request):
 # @permission_classes([HasAPIKey|IsAuthenticated])
 def mosaic_rectangle(request):
   if request.method == "GET":
-    asyncio.run(retina_first())
-    return Response('hello', status.HTTP_200_OK)
-
+    files = {}
+    files = {'max_strength':('2', 'application/json')}
+    proc = subprocess.Popen(['python', './mosaics/process_image/resource/back_retina.py'], stdout=PIPE, stderr=PIPE)
+    try:
+        # タイムアウトは60秒以上の処理だった場合
+        outs, errs = proc.communicate(timeout=60)
+    except subprocess.TimeoutExpired:
+        proc.kill()
+        outs, errs = proc.communicate()
+        print('タイムアウト発生')
+    return Response(files, status.HTTP_200_OK)
+  
   elif request.method == "POST":
     serializer = MosaicSerializer(data=request.data)
     if serializer.is_valid():
@@ -93,16 +102,5 @@ def mosaic_rectangle(request):
       del image_file
       return Response(files, status.HTTP_201_CREATED)
     return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
-  
-async def retina_first():
-  resp = RetinaFace.detect_faces('./media/images/test.jpg', threshold = 0.5)
-
-async def response_task():
-  return 'hello'
-
-async def order():
-    task1 = asyncio.create_task(retina_first())
-    test2 = await response_task()
-    return Response('hello', status.HTTP_200_OK)
 
 # Create your views here.
