@@ -65,7 +65,7 @@ def mosaic_upload(request):
 def mosaic_rectangle(request):
   if request.method == "GET":
     asyncio.run(retina_first())
-    # return Response('hello', status.HTTP_200_OK)
+    return Response('hello', status.HTTP_200_OK)
 
   elif request.method == "POST":
     serializer = MosaicSerializer(data=request.data)
@@ -102,7 +102,7 @@ async def response_task():
 
 async def order():
     task1 = asyncio.create_task(retina_first())
-    test2 = await response_task(5)
-    return Response(test2, status.HTTP_200_OK)
+    test2 = await response_task()
+    return Response('hello', status.HTTP_200_OK)
 
 # Create your views here.
