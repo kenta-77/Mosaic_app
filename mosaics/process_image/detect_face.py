@@ -49,7 +49,7 @@ class DetectFace() :
         self.result_path = "./media/results/" + str(result_path) + "result.jpg"
         self.rect_path = "./media/rectangles/" + str(result_path) + "rect_number.jpg"
 
-        self.active_person = rect_number.split(',')
+        self.active_person = int(rect_number.split(','))
         # s_comma.split(',')
         # for i in range(len(rect_number)):
         #     if rect_number[i] == ',':
