@@ -101,7 +101,7 @@ class DetectFace() :
     #最も荒いモザイクの目を計算する(顔領域の最も長い辺を探す)
     def calc_max_filter_size(self) :
         longest_side = 1
-        for face_area in self.detect_faces :
+        for face_area in self.detected_faces :
             long_side = max(face_area[2], face_area[3])
             longest_side = max(longest_side, long_side)
         max_filter_size = longest_side
