@@ -84,6 +84,9 @@ class DetectFace() :
         #ぼかしサイズが地位が過ぎる場合1に補正
         blur_filter_size[0] = max(1, blur_filter_size[0])
         blur_filter_size[1] = max(1, blur_filter_size[1])
+        #int型に変更
+        blur_filter_size[0] = int(blur_filter_size[0])
+        blur_filter_size[1] = int(blur_filter_size[1])
         return blur_filter_size
 
     #顔検出 検出した顔の数を返す
