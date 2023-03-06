@@ -11,9 +11,6 @@ from .serializers import MosaicSerializer
 import os
 from .process_image.detect_face import DetectFace
 import base64
-import gc
-import subprocess
-from subprocess import PIPE
 
 
 @api_view(["POST"]) #GETとPOSTメソッドを受け付ける
@@ -32,8 +29,8 @@ def mosaic_upload(request):
       #----モザイク化----#
       detect_test = DetectFace(str(settings.BASE_DIR), org_path, result_path, float(serializer.validated_data['strength']), serializer.validated_data['rect_number']) #モザイククラスのインスタンス作成
       detect_test.detect_face() #顔検知メソッドを実行
-      # detect_test.write_rectangle() #検知した顔の領域を表示するメソッドを実行
-      # detect_test.write_rect_and_number() #検知した顔に番号を表示するメソッドを実行
+      detect_test.write_rectangle() #検知した顔の領域を表示するメソッドを実行
+      detect_test.write_rect_and_number() #検知した顔に番号を表示するメソッドを実行
       if int(serializer.validated_data['mosaic_type']) == 0:
         detect_test.mosaic_face() #検知した顔にモザイクを表示するメソッドを実行
       elif int(serializer.validated_data['mosaic_type']) == 1:
@@ -55,28 +52,14 @@ def mosaic_upload(request):
       encoded_data = base64.b64encode(image_file)
       files = {}
       files = {'image': ("image.jpg", encoded_data, "image/jpeg")}
-      gc.collect()
       return Response(files, status.HTTP_201_CREATED)
     return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(["POST", "GET"]) #GETとPOSTメソッドを受け付ける
+@api_view(["POST"]) #GETとPOSTメソッドを受け付ける
 # @permission_classes([HasAPIKey|IsAuthenticated])
 def mosaic_rectangle(request):
-  if request.method == "GET":
-    files = {}
-    files = {'max_strength':('2', 'application/json')}
-    proc = subprocess.Popen(['nohup', 'python', './mosaics/process_image/back_retina.py', '&'], stdout=PIPE, stderr=PIPE)
-    try:
-        # タイムアウトは60秒以上の処理だった場合
-        outs, errs = proc.communicate(timeout=60)
-    except subprocess.TimeoutExpired:
-        proc.kill()
-        outs, errs = proc.communicate()
-        print('タイムアウト発生')
-    return Response(files, status.HTTP_200_OK)
-  
-  elif request.method == "POST":
+  if request.method == "POST":
     serializer = MosaicSerializer(data=request.data)
     if serializer.is_valid():
       up_path = './media/images/image.jpg'
@@ -84,8 +67,7 @@ def mosaic_rectangle(request):
         for chunk in serializer.validated_data['image'].chunks(): # 4
           f.write(chunk) # 5
       org_path = '/media/images/image.jpg'
-      test_path = '/media/images/test.jpg'
-      detect_test = DetectFace(database_path=str(settings.BASE_DIR), image_file=test_path, result_path='0123', filter_size=1) #モザイククラスのインスタンス作成
+      detect_test = DetectFace(database_path=str(settings.BASE_DIR), image_file=org_path, result_path='0123', filter_size=1) #モザイククラスのインスタンス作成
       detect_test.detect_face_rectangle() #顔検知メソッドを実行
       _, active_number, max_strength  = detect_test.detect_face_rectangle() #顔検知メソッドを実行
       rectangle = "./media/rectangles/" + '0123' + "rect_number.jpg" #結果画像のurlをDBに登録
@@ -98,8 +80,6 @@ def mosaic_rectangle(request):
       mine_type = "image/jpeg"
       file_name = "image.jpg"
       files = {'image': (file_name, encoded_data, mine_type), 'active_number': (active_number, 'application/json'), 'max_strength':(max_strength, 'application/json')}
-      del detect_test
-      del image_file
       return Response(files, status.HTTP_201_CREATED)
     return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
