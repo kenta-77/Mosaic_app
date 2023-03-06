@@ -68,7 +68,7 @@ def mosaic_rectangle(request):
           f.write(chunk) # 5
       org_path = '/media/images/image.jpg'
       detect_test = DetectFace(database_path=str(settings.BASE_DIR), image_file=org_path, result_path='0123', filter_size=1) #モザイククラスのインスタンス作成
-      detect_test.detect_face_rectangle() #顔検知メソッドを実行
+      detect_test.detect_face() #顔検知メソッドを実行
       _, active_number, max_strength  = detect_test.detect_face_rectangle() #顔検知メソッドを実行
       rectangle = "./media/rectangles/" + '0123' + "rect_number.jpg" #結果画像のurlをDBに登録
       with open(rectangle, mode='rb') as f:
