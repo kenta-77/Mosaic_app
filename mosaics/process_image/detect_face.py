@@ -85,6 +85,9 @@ class DetectFace() :
         #ぼかしサイズが地位が過ぎる場合1に補正
         blur_filter_size[0] = max(1, blur_filter_size[0])
         blur_filter_size[1] = max(1, blur_filter_size[1])
+        #int型に変更
+        blur_filter_size[0] = int(blur_filter_size[0])
+        blur_filter_size[1] = int(blur_filter_size[1])
         return blur_filter_size
 
     #顔検出 検出した顔の数を返す
@@ -171,6 +174,8 @@ class DetectFace() :
 
     #顔領域にスタンプをつける（active_faces==Trueのみ）stamp_nameにスタンプの種類を指定する（stamp_dict参照）
     def stamp_face(self, stamp_name) :
+        for i in self.active_person:
+            self.active_faces[int(i)] = False
         copy_image = self.image.copy()
         # file_path = self.database_path + "stamp_image.jpg"
         file_path = self.result_path
